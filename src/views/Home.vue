@@ -1,18 +1,29 @@
 <template>
-  <h1>Home</h1>
-  <p class="id" ref="p">my name is {{ name }} and my age is {{ age }}</p>
+  <div class="nav">
+    <h1>Home</h1>
+    <p class="id" ref="p">my name is {{ name }} and my age is {{ age }}</p>
+  </div>
   <div class="input">
     <input type="text" v-model="name" />
     <input type="number" v-model="age" />
   </div>
+  <div class="search">
+    <input type="text" v-model="search" />
+    <p> search term: {{ search }}</p>
+    <div v-for="name in filteredNames" :key="name">{{ name }}</div>
+  </div>
+  <div class="age">
+    <button @click="age--">decreace age</button>
+    <button @click="age++">increace age</button>
+  </div>
   <div class="home">
     <button @click="handleClick">Click</button>
-    <button @click="handleClickTwo">Change name/age</button>
+    <!-- <button @click="handleClickTwo">Change name/age</button> -->
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 export default {
   name: "Home",
   setup() {
@@ -20,6 +31,8 @@ export default {
     const name = ref("seif");
     const age = ref(26);
     const isOriginalText = ref(true);
+    const search = ref("");
+    const names = ref(["seif", "ahmed", "ali", "mohamed", "khaled"]);
     const handleClick = () => {
       console.log(p, p.value);
       p.value.classList.toggle("test");
@@ -30,23 +43,61 @@ export default {
       }
       isOriginalText.value = !isOriginalText.value;
     };
-    const handleClickTwo = () => {
-      name.value = "ahmed";
-      age.value = 27;
-      if (isOriginalText.value) {
-        p.value.textContent = "i train gym and i love it";
-      } else {
-        p.value.textContent = `my name is ${name.value} and my age is ${age.value}`;
-      }
-      isOriginalText.value = !isOriginalText.value;
-    };
-
-    return { p, handleClick, name, age, handleClickTwo };
+    // const handleClickTwo = () => {
+    //   name.value = "ahmed";
+    //   age.value = 27;
+    //   if (isOriginalText.value) {
+    //     p.value.textContent = "i train gym and i love it";
+    //   } else {
+    //     p.value.textContent = `my name is ${name.value} and my age is ${age.value}`;
+    //   }
+    //   isOriginalText.value = !isOriginalText.value;
+    // };
+    const filteredNames = computed(() => {
+      return names.value.filter((name) => name.includes(search.value));
+    });
+    return { p, handleClick, name, age, filteredNames, search };
   },
 };
 </script>
 
 <style scoped>
+.search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+}
+.age {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+}
+.age button {
+  background-color: lightcoral;
+  color: #fff;
+  border: none;
+  height: 100%;
+  width: 60%;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.age button:hover {
+  background-color: black;
+}
 .input {
   display: flex;
   flex-direction: column;
@@ -55,7 +106,7 @@ export default {
   gap: 10px;
   width: 100%;
   height: 100%;
-  margin-top: 20px; 
+  margin-top: 20px;
 }
 input {
   padding: 10px;
@@ -72,23 +123,41 @@ input {
 }
 input:hover {
   background-color: lightblue;
-  animation: fadeIn 0.3s ease;
 }
-h1 {
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  color: #fff;
+  border-radius: 10px;
+}
+.nav h1 {
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: #4d4c4c;
   font-family: "Arial", sans-serif;
   transition: all 0.3s ease;
 }
-h1:hover {
-  color: #007bff;
+.nav h1:hover {
+  color: #fff;
+}
+.nav p {
+  color: #4d4c4c;
+  transition: all 0.3s ease;
+}
+.nav p:hover {
+  color: white;
 }
 .id {
   font-size: 1rem;
   font-weight: bold;
-  color: #333;
+  color: #fff;
   font-family: "Arial", sans-serif;
 }
 .home {
